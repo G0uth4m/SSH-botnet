@@ -85,7 +85,9 @@ uid=1000(msfadmin) gid=1000(msfadmin) groups=4(adm),20(dialout),24(cdrom),25(flo
 [+] id
 uid=1000(msfadmin) gid=1000(msfadmin) groups=4(adm),20(dialout),24(cdrom),25(floppy),29(audio),30(dip),44(video),46(plugdev),107(fuse),111(lpadmin),112(admin),119(sambashare),1000(msfadmin)
 
-ssh@botnet:~$ 
+ssh@botnet:~$ exit
+
+[*] History of commands stored in logs.txt
 
 
 ```
