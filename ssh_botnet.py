@@ -31,7 +31,7 @@ GitHub : https://github.com/G0uth4m
 """)
 
 f = open('logs.txt', 'a')
-f2 = open('session.txt', 'a')
+f2 = open('session.txt', 'w')
 
 interface = raw_input('[*] Interface : ')
 user_name = raw_input('[*] Single username for all systems : ')
@@ -111,6 +111,7 @@ print "\nRunning ssh servers : "
 for i in ssh_servers:
 	print "Host : " + i[0] + "\t\t" + "port : " + str(i[1])
 	f2.write(i[0] + ":" + str(i[1]) + '\n')
+print '\n'
 
 f2.close()	
 
@@ -120,6 +121,7 @@ while True:
 
 	if a == "exit()" or a == "exit":
 		f.close()
+		print("\n[*] History of commands stored in logs.txt")
 		break;
 	else:	
 		botnetCommand(a)
