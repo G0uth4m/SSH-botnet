@@ -126,10 +126,3 @@ while True:
 	else:	
 		botnetCommand(a)
 	
-	
-
-#run commands as root
-#botnetCommand('sh login.sh')#change login.sh to do certain task
-
-#botnetCommand('ls')
- 
