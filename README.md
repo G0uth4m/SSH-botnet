@@ -8,9 +8,9 @@ $ pip install -r requirements.txt --user
 
 ## Usage
 ```
-$ python ssh_botnet.py 
+$ python ssh_botnet.py -u msfadmin -p msfadmin -i vboxnet0
 
-Author : Goutham Ramesh
+Author : Goutham R
 GitHub : https://github.com/G0uth4m
 	
 	- This is a simple tool handy for linux administrators 
@@ -33,10 +33,6 @@ GitHub : https://github.com/G0uth4m
 |___/___/_| |_|___|_.__/ \___/ \__|_| |_|\___|\__|
              |_____|                              
 
-[*] Interface : vboxnet0
-[*] Single username for all systems : msfadmin
-[*] Single password for all users : msfadmin
-
 
 [*] Scanning network for ssh servers ...
 [+] Scan complete
@@ -45,6 +41,8 @@ Running ssh servers :
 Host : 192.168.56.105		port : 22
 Host : 192.168.56.106		port : 22
 Host : 192.168.56.107		port : 22
+
+Continue adding bots to the botnet?[Y/n] y
 
 ssh@botnet:~$ ls
 [*] Output from 192.168.56.105
