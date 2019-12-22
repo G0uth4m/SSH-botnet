@@ -55,6 +55,7 @@ def getSshServers(myip):
 	return ssh_servers
 
 def listSshServers(ssh_servers):
+	print("Running ssh servers : ")
 	f2 = open('session.txt', 'w')
 
 	for i, j in ssh_servers.items():
@@ -100,6 +101,7 @@ GitHub : https://github.com/G0uth4m
 	listSshServers(ssh_servers)
 
 	choice = raw_input("Continue adding bots to the botnet?[Y/n] ")
+	print("\n")
 	if(choice in ["n", "N", "no"]):
 		exit()
 
