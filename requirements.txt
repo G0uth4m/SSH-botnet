@@ -1,4 +1,5 @@
 pexpect
-nmap
+python-nmap
 termcolor
 datetime
+optparse
